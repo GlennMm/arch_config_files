@@ -1,0 +1,10 @@
+#! /usr/bin/bash
+
+cd $HOME/software/ &&
+rm -r nvim-linux64* || set +e &&
+wget https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz || echo 'Faield to download nvim'; set -e &&
+tar xzvf nvim-linux64.tar.gz &&
+rm -r nvim-linux64.tar.gz || echo 'nvim tar.gz already removed.' set +e &&
+cd ./nvim-linux64/bin || echo 'Could not cd into nvim bin dir' ;set -e &&
+sudo ln -sf $HOME/software/nvim-linux64/bin/nvim /usr/bin/nvim || echo 'Could not create the nvim symlink!'; set -e &&
+echo 'Neovim nightly has finished installed successfully.'

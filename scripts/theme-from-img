@@ -1,0 +1,11 @@
+#! /usr/bin/env bash
+echo 'Creating theme...';
+wal -i $2 && 
+gen_chrom_theme &&
+themix-gui &&
+lxappearance &&
+xfce4-appearance-settings &&
+wal-alac &&
+echo 'Done'
+
+
