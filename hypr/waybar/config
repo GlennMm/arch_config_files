@@ -1,0 +1,168 @@
+{
+  "mode": "dock",
+    "height": 20,
+    "spacing": 4, 
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": ["sway/window"],
+    "modules-right": ["idle_inhibitor", "custom/pacman", "bluetooth", "network", "cpu", "memory", "temperature", "backlight", "battery", "battery#bat2", "clock", "pulseaudio", "tray", "custom/shutdown"],
+    "sway/window": {
+        "format": " {app_id} ",
+        "icon-theme": "Papirus",
+    }, 
+    "wlr/workspaces": {
+         "disable-scroll": true,
+         "all-outputs": true,
+         "format": "{icon}",
+         "format-icons": {
+             "1": "",
+             "2": "",
+             "3": "",
+             "4": "",
+             "5": "",
+             "urgent": "",
+             "focused": "",
+             "default": ""
+         }
+     },
+    "wlr/taskbar": {
+        "format": "{icon}",
+        "icon-size": 24,
+        "icon-theme": "Papirus",
+        "tooltip-format": "{title}",
+        "on-click": "activate",
+        "on-click-middle": "close",
+        "exec-if": "test (swaymsg -t get_tree| jq -r 'recurse(.nodes[]?) | recurse(.floating_nodes[]?) | select(.type==\"con\"), select(.type==\"floating_con\") | select((.app_id != null) or .name != null) | {name} | .name' | count) -eq 0"
+    },
+    "bluetooth" : {
+      "format": " {status}",
+	    "format-connected": " {device_alias}",
+	    "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+	    "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
+	    "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+      "interval": 30,
+      "format-icons": {
+        "enabled": "",
+        "disabled": ""
+      },
+	    "tooltip-format": "{status}",
+      "on-click": "blueberry"
+    },
+    "keyboard-state": {
+        "numlock": true,
+        "capslock": true,
+        "format": "{name} {icon}",
+        "format-icons": {
+            "locked": "  ",
+            "unlocked": "  "
+        }
+    },
+    "sway/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "  ",
+            "deactivated": "  "
+        }
+    },
+    "tray": {
+        "spacing": 10
+    },
+    "clock": {
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": " {:%Y-%m-%d}",
+        "format": " {:%H:%M}"
+    },
+    "cpu": {
+        "format": "  {usage}%",
+        "tooltip": false
+    },
+    "memory": {
+        "format": "  {}% "
+    },
+    "temperature": {
+        "critical-threshold": 80,
+        "format-critical": "{icon} {temperatureC}°C ",
+        "format": "{icon} {temperatureC}°C ",
+        "format-icons": ["  ", "  ", "  "]
+    },
+    "backlight": {
+        "on-scroll-up": "brightnessctl set +5%",
+        "on-scroll-down": "brightnessctl set 5%-",
+        "format": "{icon} {percent}%",
+        "format-icons": [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+    },
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "interval": "1",
+        "format": "{icon} {capacity}% ",
+        "format-charging": " {capacity}% ",
+        "format-plugged": " {capacity}% ",
+        "format-alt": "{icon} {time} ",
+        "format-icons": ["  ", "  ", "  ", "  ", "  "]
+    },
+    "battery#bat2": {
+        "bat": "BAT2"
+    },
+    "network": {
+        "format-wifi": "  {essid} ({signalStrength}%) ",
+        "format-ethernet": " {ipaddr}/{cidr} ",
+        "tooltip-format": " {ifname} via {gwaddr} ",
+        "format-linked": " {ifname} (No IP) ",
+        "format-disconnected": "⚠ Disconnected ",
+        "format-alt": "{ifname}: {ipaddr}/{cidr}",
+        "interval": "60"
+    },
+    "pulseaudio": {
+        "scroll-step": 5, // %, can be a float
+        "format": "{volume}% {icon} {format_source}",
+        "format-bluetooth": "{icon} {volume}%  {format_source}",
+        "format-bluetooth-muted": "  {icon}  {format_source}",
+        "format-muted": "  {format_source}",
+        "format-source": "  {volume}%",
+        "format-source-muted": "  ",
+        "format-icons": {
+            "headphone": "  ",
+            "hands-free": "  ",
+            "headset": "  ",
+            "phone": "  ",
+            "portable": "  ",
+            "car": "   ",
+            "default": ["  ", "  ", "  "]
+        },
+        "on-click": "pavucontrol"
+    },
+    "custom/media": {
+        "format": "{icon} {}",
+        "return-type": "json",
+        "max-length": 40,
+        "format-icons": {
+            "spotify": "  ",
+            "default": " 🎜 "
+        },
+        "escape": true,
+        "exec": "$HOME/.config/waybar/mediaplayer.py 2> /dev/null" // Script in resources folder
+    },
+    "custom/shutdown": {
+        "format": "  ",
+        "tooltip-format": "Power menu",
+        "on-click": "wlogout -p layer-shell -r 50"
+      },
+    "custom/menu": {
+        "format": "  ",
+        "tooltip-format": "Applciation menu",
+        "on-click": "~/.config/hypr/scripts/menu"
+      },
+    "custom/pacman": {
+      "format": "  {} ",
+      "interval": 21600,                     // every 6 hours
+      "exec": "checkupdates | wc -l",       // # of updates
+      "exec-if": "exit 0",                  // always run; consider advanced run conditions
+      "on-click": "alacritty -e 'sudo pacman -Syu'; pkill -SIGRTMIN+8 waybar", // update system
+      "signal": 8
+    }
+}
